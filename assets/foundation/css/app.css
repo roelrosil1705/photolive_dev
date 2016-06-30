@@ -1,0 +1,21 @@
+.top-logo{
+    height: 667px;
+}
+
+.bot-logo{
+    height: 445px;
+}
+
+#shareview{
+    max-height: 960px;
+}
+
+#bdy{
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#preview{
+    max-width: 50%;
+    border: 29px solid;
+}
