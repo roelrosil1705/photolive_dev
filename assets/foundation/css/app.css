@@ -19,3 +19,26 @@
     max-width: 50%;
     border: 29px solid;
 }
+
+#frameview{
+    /*max-width: 50%;*/
+    background-color: #0a0a0a;
+    border: 29px solid;
+    align-items: center;
+}
+
+#frame1:hover{
+    -moz-box-shadow: 0 0 15px #fff;
+    -webkit-box-shadow: 0 0 15px #fff;
+    box-shadow: 0px 0px 15px #fff;
+}
+#frame2:hover{
+    -moz-box-shadow: 0 0 15px #fff;
+    -webkit-box-shadow: 0 0 15px #fff;
+    box-shadow: 0px 0px 15px #fff;
+}
+#frame3:hover{
+    -moz-box-shadow: 0 0 15px #fff;
+    -webkit-box-shadow: 0 0 15px #fff;
+    box-shadow: 0px 0px 15px #fff;
+}

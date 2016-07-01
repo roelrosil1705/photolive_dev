@@ -45,14 +45,14 @@ class Photolive extends CI_Controller {
     }
 
     function merge_image( $imgloc = null ){
-        list($bg_width, $bg_height) = getimagesize('assets/front_end/frames/ss1.png');
+        list($bg_width, $bg_height) = getimagesize('assets/front_end/frames/ss1.png');  // for cms db
         list($bg_widtha, $bg_heighta) = getimagesize($imgloc);
 //        print_r($bg_widtha.'>'.$bg_heighta);
         $im = imagecreatetruecolor($bg_width,$bg_height) or die('Cannot Initialize new GD image stream');
         $iTmp = imageCreateFromJPEG($imgloc);
         $iFrame = imageCreateFromPNG('assets/front_end/frames/ss1.png');
         imagecopymerge($im, $iTmp,77,100, 0, 0, $bg_widtha, $bg_heighta, 100);
-        imagecopy($im, $iFrame, 0, 0, 0, 0, $bg_width, $bg_height);
+//        imagecopy($im, $iFrame, 0, 0, 0, 0, $bg_width, $bg_height);
 
         $outfile = "assets/uploaded/" . date('YmdHis') . "single.jpg";
         $quality = 90;

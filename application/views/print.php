@@ -17,8 +17,6 @@ $dir = 'assets/uploaded/';
 $folder = scandir($dir,1);
 foreach($folder as $img) {
     if(is_file($dir.$img) && $img != 'Thumbs.db') {
-//        $data['photo'] = $img;
-//
         echo '<img src="'.base_url($dir.$img).'">';
         break;
     }

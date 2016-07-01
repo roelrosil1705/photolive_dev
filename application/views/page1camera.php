@@ -10,54 +10,12 @@
     <script src="<?=base_url('assets/js/jquery-1.12.4.min.js');?>"></script>
     <script src="<?=base_url('assets/js/swfobject.js');?>"></script>
     <script src="<?=base_url('assets/js/scriptcam/scriptcam.min.js');?>"></script>
+    <link rel="stylesheet" href="<?=base_url('assets/foundation/js/app.js');?>">
     <script>
         var MyNameSpace = {
             config: {
                 base_url: "<?php echo base_url(); ?>"
             }
-        }
-    </script>
-    <script language="JavaScript">
-        $(document).ready(function() {
-            $("#webcam").scriptcam({
-                width: 960,
-                height: 720,
-                showMicrophoneErrors:false,
-                onError:onError,
-                cornerRadius:20,
-                disableHardwareAcceleration:1,
-//                cornerColor:'e3e5e2',
-//                onWebcamReady:onWebcamReady,
-//                uploadImage:MyNameSpace.config.base_url+'assets/js/scriptcam/upload.gif',
-                onPictureAsBase64:base64_toimage
-            });
-        });
-        function base64_toimage() {
-            $.ajax
-            ({
-                url: "index.php/photolive/print_img",
-                type: 'post',
-                crossDomain: true,
-                data: {'contents': $.scriptcam.getFrameAsBase64()},
-                cache: false,
-                success: function (html) {
-//                    console.log(html);
-                    $('#camview').addClass('hide');
-                    $('#captureBtn').addClass('hide');
-                    $('#shareview').removeClass('hide');
-//                    $('.fb').removeClass('hide');
-//                    $('.tweet').removeClass('hide');
-//                    $('.ema').removeClass('hide');
-                    $('.btnPrint').removeClass('hide');
-                    $('#preview').attr('src', html);
-                }
-            });
-
-//            $('#image').attr("src","data:image/png;base64,"+$.scriptcam.getFrameAsBase64());
-        };
-        function onError(errorId,errorMsg) {
-            $( "#btn2" ).attr( "disabled", true );
-            alert(errorMsg);
         }
     </script>
 </head>
@@ -67,29 +25,51 @@
 
         </div>
     </div>
-    <div id="camview" class="row text-center">
+
+    <div id="first_view" class="row text-center">
+        <div class="large-12 columns">
+            <img id="imgview" src="" alt="">
+        </div>
+    </div>
+    <div id="frameview" class="row text-center">
+        <div class="row">
+            <div class="column large-4 medium-4 small-12">
+                <img id="frame1" src="<?=base_url('assets/front_end/frames/ss1.png')?>" alt="">
+            </div>
+            <div class="column large-4 medium-4 small-12">
+                <img id="frame2" src="<?=base_url('assets/front_end/frames/square.png')?>" alt="">
+            </div>
+            <div class="column large-4 medium-4 small-12">
+                <img id="frame3" src="<?=base_url('assets/front_end/frames/custom_frame1.png')?>" alt="">
+            </div>
+        </div>
+    </div>
+
+    <div id="camview" class="row text-center hide">
         <div class="large-12 columns">
             <div id="webcam">
             </div>
         </div>
     </div>
+
     <div id="shareview" class="row text-center hide">
         <div class="large-12 columns">
             <img id="preview" src="" alt="">
         </div>
     </div>
     <div class="row text-center" style="margin-top: 10px;">
-        <a id="captureBtn" class="button large" id="btn2" onclick="base64_toimage()">Take a Photo</a>
+        <a class="select_frame button large">Select</a>
+        <a id="captureBtn" class="button large hide" id="btn2" onclick="base64_toimage()">Take a Photo</a>
         <a class="fb button large hide">Facebook</a>
         <a class="tweet button large hide" onclick="location.href='<?php echo base_url('index.php/photolive/tweet/?authenticate=1&force=1')?>'">Twitter</a>
         <a class="ema button large hide">Email</a>
         <a class="btnPrint button large hide" href="<?=base_url('index.php/photolive/print_me');?>" target="_blank">Print</a>
     </div>
-    <div class="row bot-logo">
-        <div class="large-12 columns">
-
-        </div>
-    </div>
+<!--    <div class="row bot-logo">-->
+<!--        <div class="large-12 columns">-->
+<!---->
+<!--        </div>-->
+<!--    </div>-->
     <div id="fb-root"></div>
 
     <script src="<?=base_url('assets/foundation/js/vendor/foundation.js')?>"></script>
