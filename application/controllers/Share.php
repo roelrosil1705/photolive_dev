@@ -47,31 +47,13 @@ class Share extends Main_Controller {
 
         }else{
 
-            $photo = $this->Photos->getPhotoByName($data['photo']);
-
-            $this->SharedPhotos->insertData(array('share' => 'facebook',
-                'username' => '',
-                'email' => $user_profile['email'],
-                'newsletter' => 'yes',
-                'photo_id' =>  $photo['id'],
-                'date' => date("F j, Y, g:i a"),
-                'client_id' => $photo['client_id'],
-                'event_id' => $photo['event_id']
-            ));
-
+            $photo = $this->Photos->getPhotoByName($this->input->post('comp_img'));
 
             $facebook->setFileUploadSupport(true);
-            if ($content) {
-                $album_details = array(
-                    "name" => html_entity_decode($content['fb_title'], ENT_QUOTES, 'UTF-8'), // Album Name ()
-                    "message" => $content['fb_album'] // Album Description
-                );
-            }else{
-                $album_details = array(
-                    "name" => html_entity_decode("Photolive", ENT_QUOTES, 'UTF-8'), // Album Name ()
-                    "message" => "Havaianas" // Album Description
-                );
-            }
+            $album_details = array(
+                "name" => html_entity_decode("Photolive", ENT_QUOTES, 'UTF-8'), // Album Name ()
+                "message" => "Havaianas" // Album Description
+            );
 
             $albums = $facebook->api('/me/albums');
 

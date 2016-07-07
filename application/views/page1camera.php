@@ -90,8 +90,41 @@
         $('.fb').on('click',function(){
             FB.login(function(response) {
                 if (response.authResponse) {
-                    console.log(response.authResponse);
-//                location.href="/share/fbShare/<?php //echo $fbShareBy; ?>//";
+//                location.href="/share/fbShare";
+//                    $.ajax({
+//                        url: MyNameSpace.config.base_url+'share/fbShare',
+//                        type:'post',
+//                        data: {
+//                            'comp_img' : document.getElementById('preview').src
+//                        },
+//                        success: function(data) {
+//                            //console.log(data);
+//                            // location.reload();
+////                            $('#deduct_qty_total').val(data);
+//                        }
+//                    });
+                    console.log(document.getElementById('preview').src);
+
+                    var wallPost = {
+                        message : "testing...",
+                        picture: document.getElementById('preview').src
+                    };
+                    FB.api('/me/feed', 'post', wallPost , function(response) {
+                        if (!response || response.error) {
+                            alert('Error occured: ' + JSON.stringify(response.error));
+                        } else {
+                            alert('Post ID: ' + response);
+                        }
+                    });
+
+//                    var access_token =   FB.getAuthResponse()['accessToken'];
+//                    FB.api('/me/photos?access_token='+access_token, 'post', { url: document.getElementById('preview').src, access_token: access_token }, function(response) {
+//                        if (!response || response.error) {
+//                            alert('Error occured: ' + JSON.stringify(response.error));
+//                        } else {
+//                            alert('Post ID: ' + response);
+//                        }
+//                    });
                 } else {
 //                location.href = "/shared";
                 }
