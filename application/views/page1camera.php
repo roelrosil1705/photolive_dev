@@ -26,28 +26,23 @@
         </div>
     </div>
 
-    <div id="first_view" class="row text-center">
+    <div id="camview" class="row text-center">
         <div class="large-12 columns">
-            <img id="imgview" src="" alt="">
-        </div>
-    </div>
-    <div id="frameview" class="row text-center">
-        <div class="row">
-            <div class="column large-4 medium-4 small-12">
-                <img id="frame1" src="<?=base_url('assets/front_end/frames/ss1.png')?>" alt="">
-            </div>
-            <div class="column large-4 medium-4 small-12">
-                <img id="frame2" src="<?=base_url('assets/front_end/frames/square.png')?>" alt="">
-            </div>
-            <div class="column large-4 medium-4 small-12">
-                <img id="frame3" src="<?=base_url('assets/front_end/frames/custom_frame1.png')?>" alt="">
+            <div id="webcam">
             </div>
         </div>
     </div>
 
-    <div id="camview" class="row text-center hide">
-        <div class="large-12 columns">
-            <div id="webcam">
+    <div id="frameview" class="row text-center">
+        <div class="row">
+            <div class="column large-4 medium-4 small-12">
+                <img id="frame1" src="<?=base_url('assets/front_end/frames/frame1.png')?>" alt="">
+            </div>
+            <div class="column large-4 medium-4 small-12">
+                <img id="frame2" src="<?=base_url('assets/front_end/frames/frame2.png')?>" alt="">
+            </div>
+            <div class="column large-4 medium-4 small-12">
+                <img id="frame3" src="<?=base_url('assets/front_end/frames/frame3.png')?>" alt="">
             </div>
         </div>
     </div>
@@ -58,8 +53,7 @@
         </div>
     </div>
     <div class="row text-center" style="margin-top: 10px;">
-        <a class="select_frame button large">Select</a>
-        <a id="captureBtn" class="button large hide" id="btn2" onclick="base64_toimage()">Take a Photo</a>
+        <a id="captureBtn" class="button large" id="btn2" onclick="base64_toimage()">Take a Photo</a>
         <a class="fb button large hide">Facebook</a>
         <a class="tweet button large hide" onclick="location.href='<?php echo base_url('index.php/photolive/tweet/?authenticate=1&force=1')?>'">Twitter</a>
         <a class="ema button large hide">Email</a>
@@ -97,7 +91,7 @@
             FB.login(function(response) {
                 if (response.authResponse) {
                     console.log(response.authResponse);
-//                location.href="/share/fbShareHow/<?php //echo $fbShareBy; ?>//";
+//                location.href="/share/fbShare/<?php //echo $fbShareBy; ?>//";
                 } else {
 //                location.href = "/shared";
                 }

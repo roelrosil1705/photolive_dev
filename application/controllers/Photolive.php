@@ -41,18 +41,18 @@ class Photolive extends CI_Controller {
         fwrite($fp, $decodedData);
         fclose($fp);
 
-        $this->merge_image( 'assets/temp/'.$file.'.jpg' );
+        $this->merge_image( 'assets/temp/'.$file.'.jpg', $this->input->post('frame') );
     }
 
-    function merge_image( $imgloc = null ){
-        list($bg_width, $bg_height) = getimagesize('assets/front_end/frames/ss1.png');  // for cms db
+    function merge_image( $imgloc = null, $frmloc = null ){
+        list($bg_width, $bg_height) = getimagesize($frmloc);  // for cms db
         list($bg_widtha, $bg_heighta) = getimagesize($imgloc);
 //        print_r($bg_widtha.'>'.$bg_heighta);
         $im = imagecreatetruecolor($bg_width,$bg_height) or die('Cannot Initialize new GD image stream');
         $iTmp = imageCreateFromJPEG($imgloc);
-        $iFrame = imageCreateFromPNG('assets/front_end/frames/ss1.png');
-        imagecopymerge($im, $iTmp,77,100, 0, 0, $bg_widtha, $bg_heighta, 100);
-//        imagecopy($im, $iFrame, 0, 0, 0, 0, $bg_width, $bg_height);
+        $iFrame = imageCreateFromPNG($frmloc);
+        imagecopymerge($im, $iTmp, 0, 0, 0, 0, $bg_widtha, $bg_heighta, 100);
+        imagecopy($im, $iFrame, 0, 0, 0, 0, $bg_width, $bg_height);
 
         $outfile = "assets/uploaded/" . date('YmdHis') . "single.jpg";
         $quality = 90;
