@@ -1,6 +1,5 @@
 var img_type = '';
 
-$(document).foundation();
 $(document).ready(function() {
     $("#webcam").scriptcam({
         width: 960,
@@ -38,9 +37,9 @@ function base64_toimage() {
                    $('#captureBtn').addClass('hide');
                    $('#frameview').addClass('hide');
                    $('#shareview').removeClass('hide');
-                   $('.fb').removeClass('hide');
-//                    $('.tweet').removeClass('hide');
-//                    $('.ema').removeClass('hide');
+                   // $('.fb').removeClass('hide');
+                   // $('.tweet').removeClass('hide');
+                   $('.ema').removeClass('hide');
                    $('.btnPrint').removeClass('hide');
                    $('#preview').attr('src', html);
                }
@@ -81,4 +80,30 @@ $('#frame3').on('click',function (e) {
     img_type = document.getElementById('frame3').src;
     $(this).css({"-moz-box-shadow": "0 0 15px #fff", "-webkit-box-shadow": "0 0 15px #fff", "box-shadow": "0 0 15px #fff"});
     $('#frame1, #frame2').css({"-moz-box-shadow": "0 0 0 #fff", "-webkit-box-shadow": "0 0 0 #fff", "box-shadow": "0 0 0 #fff"});
+});
+
+$('.ema').on('click',function (e) {
+    e.preventDefault();
+    $.ajax
+    ({
+        url: "index.php/photolive/email_share",
+        type: 'post',
+        crossDomain: true,
+        data: {
+            'img': document.getElementById('preview').src
+        },
+        cache: false,
+        success: function (html) {
+                   console.log(html);
+//             $('#camview').addClass('hide');
+//             $('#captureBtn').addClass('hide');
+//             $('#frameview').addClass('hide');
+//             $('#shareview').removeClass('hide');
+//             $('.fb').removeClass('hide');
+//             $('.tweet').removeClass('hide');
+//             $('.ema').removeClass('hide');
+            // $('.btnPrint').removeClass('hide');
+            // $('#preview').attr('src', html);
+        }
+    });
 });

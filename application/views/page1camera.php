@@ -10,7 +10,7 @@
     <script src="<?=base_url('assets/js/jquery-1.12.4.min.js');?>"></script>
     <script src="<?=base_url('assets/js/swfobject.js');?>"></script>
     <script src="<?=base_url('assets/js/scriptcam/scriptcam.min.js');?>"></script>
-    <link rel="stylesheet" href="<?=base_url('assets/foundation/js/app.js');?>">
+    <script src="<?=base_url('assets/foundation/js/app.js');?>"></script>
     <script>
         var MyNameSpace = {
             config: {
@@ -56,7 +56,7 @@
         <a id="captureBtn" class="button large" id="btn2" onclick="base64_toimage()">Take a Photo</a>
         <a class="fb button large hide">Facebook</a>
         <a class="tweet button large hide" onclick="location.href='<?php echo base_url('index.php/photolive/tweet/?authenticate=1&force=1')?>'">Twitter</a>
-        <a class="ema button large hide">Email</a>
+        <a id="ema_btn" class="ema button large hide">Email</a>
         <a class="btnPrint button large hide" href="<?=base_url('index.php/photolive/print_me');?>" target="_blank">Print</a>
     </div>
 <!--    <div class="row bot-logo">-->
@@ -75,7 +75,7 @@
                 // cookie: true,
                 xfbml: true,
                 oauth: true,
-                version: 'v2.5'
+                version: 'v2.4'
             });
         };
 
@@ -104,12 +104,15 @@
 //                        }
 //                    });
                     console.log(document.getElementById('preview').src);
+                    var str_url = '';
+                    str_url = document.getElementById('preview').src;
 
                     var wallPost = {
                         message : "testing...",
-                        picture: document.getElementById('preview').src
+                        url: "{"+str_url+"}"
                     };
-                    FB.api('/me/feed', 'post', wallPost , function(response) {
+                    FB.api('/me/photos', 'post', wallPost , function(response) {
+                        console.log(response);
                         if (!response || response.error) {
                             alert('Error occured: ' + JSON.stringify(response.error));
                         } else {
@@ -128,7 +131,7 @@
                 } else {
 //                location.href = "/shared";
                 }
-            }, {scope: 'email,publish_actions,user_photos'});
+            }, {scope: 'email,publish_actions,user_photos,photo_upload'});
 
         });
     </script>
