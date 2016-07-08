@@ -24,6 +24,21 @@ class Photolive extends CI_Controller {
         $this->load->library('twitter/tmhOAuth');
         $this->load->library('twitter/tmhUtilities');
         $this->load->library('SimpleImage');
+
+        /*email*/
+        // The mail sending protocol.
+        $config['protocol'] = 'smtp';
+        // SMTP Server Address for Gmail.
+        $config['smtp_host'] = 'mail.cloudwalkdigital.com';
+        // SMTP Port - the port that you is required
+        $config['smtp_port'] = 26;
+        // SMTP Username like. (abc@gmail.com)
+        $config['smtp_user'] = 'roel.r@cloudwalkdigital.com';
+        // SMTP Password like (abc***##)
+        $config['smtp_pass'] = 'Cloud2468';
+        $config['mailtype'] = 'html';
+        // Load email library and passing configured values to email library
+        $this->load->library('email', $config);
     }
 
     public function index()
@@ -41,7 +56,7 @@ class Photolive extends CI_Controller {
         fwrite($fp, $decodedData);
         fclose($fp);
 
-        $this->merge_image( 'assets/temp/'.$file.'.jpg', $this->input->post('frame') );
+        echo $this->merge_image( 'assets/temp/'.$file.'.jpg', $this->input->post('frame') );
     }
 
     function merge_image( $imgloc = null, $frmloc = null ){
@@ -59,7 +74,7 @@ class Photolive extends CI_Controller {
         imagejpeg($im,$outfile,$quality);
         imagedestroy($im);
 
-        echo $outfile;
+        return base_url($outfile);
     }
 
     function print_me(){
@@ -71,10 +86,7 @@ class Photolive extends CI_Controller {
         $tmhOAuth = new tmhOAuth(array(
             'consumer_key'    => '7jZrMbeY8td0ESJ7HFwQ',
             'consumer_secret' => 'meaiRzsdIABV8vHIXL7clcpuYYc6fPnSRmjBqQphU',
-            'user_token'      => '306045287-l8q9UjwVIG6bOBK1wcgP1r89DO2wvMH7rVHl5xFx',
-            'user_secret'     => 'Wb0BKrEPBqF5Mr9TfT85gdI8pnxby2UkD6rviDZYhw4Gq',
         ));
-
         $here = tmhUtilities::php_self();
 
         function outputError($tmhOAuth) {
@@ -121,48 +133,16 @@ class Photolive extends CI_Controller {
                 $twitimg = $dir . 'thumbnail/' . $data['photo'];
                 /* */
 
-//                if($content){
-//                    $params = array(
-//                        'status' => $content['twitter'],
-//                        'media' => "@".realpath($twitimg)
-//                    );
-//
-//                    $code = $tmhOAuth->request('POST', $tmhOAuth->url('1.1/statuses/update_with_media'),$params,TRUE, TRUE);
-//                }else{
-                    $params = array(
-                        'status' => "107th PDA",
-                        'media' => "@".realpath($twitimg)
-                    );
-                    $code = $tmhOAuth->request('POST', $tmhOAuth->url('1.1/statuses/update_with_media'),$params,TRUE, TRUE);
+                echo $dir . $data['photo'];
+                echo 'thumb > ' . $dir . 'thumbnail/' . $data['photo'];
 
-//                }
+                $params = array(
+                    'status' =>'Testing',
+                    'media' => "@".realpath($twitimg)
+                );
 
-
-                $photo = $this->Photos->getPhotoByName($data['photo']);
-
-//                $this->SharedPhotos->insertData(array('share' => 'twitter',
-//                    'username' => $resp->{'screen_name'},
-//                    'email' => '',
-//                    'newsletter' => 'yes',
-//                    'photo_id' =>  $photo['id'],
-//                    'date' => date("F j, Y, g:i a"),
-//                    'client_id' => $photo['client_id'],
-//                    'event_id' => $photo['event_id']
-//                ));
-
-                $resp_media = json_decode($tmhOAuth->response['response']);
-
-                $_SESSION['access_token'] = "";
-                unset($_SESSION['access_token']);
-                session_destroy();
-//                redirect('shared');
-            } else {
-                outputError($tmhOAuth);
-//                redirect('shared');
-                session_destroy();
-//                 $this->load->view('shared_successfully');
+                $code = $tmhOAuth->request('POST', $tmhOAuth->url('1.1/statuses/update_with_media'),$params,TRUE, TRUE);
             }
-            // we're being called back by Twitter
         } elseif (isset($_REQUEST['oauth_verifier'])) {
             $tmhOAuth->config['user_token']  = $_SESSION['oauth']['oauth_token'];
             $tmhOAuth->config['user_secret'] = $_SESSION['oauth']['oauth_token_secret'];
@@ -177,7 +157,9 @@ class Photolive extends CI_Controller {
                 header("Location: {$here}");
             } else {
                 outputError($tmhOAuth);
-                redirect('shared');
+                // redirect('photolivedesktop.com/shared');
+                // redirect(base_url().'shared');
+//                redirect('shared');
                 session_destroy();
             }
             // start the OAuth dance http://www.photolivedesktop.com/assets/php/tweet.php?authenticate=1&force=1
@@ -206,11 +188,28 @@ class Photolive extends CI_Controller {
             } else {
                 outputError($tmhOAuth);
                 // redirect('photolivedesktop.com/shared');
-                redirect('shared');
+//                redirect('shared');
                 // redirect(base_url().'shared');
                 // $this->load->view('shared_successfully');
                 session_destroy();
             }
+        }
+
+    }
+
+    function email_share(){
+        // Sender email address
+        $this->email->from( 'info@cloudwalkdigital.com' );
+        // Receiver email address.for single email
+        $this->email->to( 'roelrosil1705@gmail.com', 'Roel');
+        // Subject of email
+        $this->email->subject('Photolive');
+        // Message in email
+        $this->email->message('');
+        $this->email->attach( $this->input->post('img') );
+        // It returns boolean TRUE or FALSE based on success or failure
+        if( $this->email->send() ){
+            echo 'success';
         }
     }
 }
