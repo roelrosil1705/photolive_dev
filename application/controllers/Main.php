@@ -27,5 +27,6 @@ class Main extends CI_Controller {
         }
 
         $this->load->view('page1camera');
+//        $this->load->view('main');
     }
 }

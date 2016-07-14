@@ -21,29 +21,41 @@ class Photolive extends CI_Controller {
 
     function __construct() {
         parent::__construct();
+        $this->load->library('phpmailer/phpmailer');
         $this->load->library('twitter/tmhOAuth');
         $this->load->library('twitter/tmhUtilities');
         $this->load->library('SimpleImage');
 
         /*email*/
         // The mail sending protocol.
+        $config = array();
+        $config['useragent']           = "CodeIgniter";
+        $config['mailpath']            = "/usr/sbin/sendmail"; // or "/usr/bin/sendmail"
         $config['protocol'] = 'smtp';
         // SMTP Server Address for Gmail.
         $config['smtp_host'] = 'mail.cloudwalkdigital.com';
         // SMTP Port - the port that you is required
         $config['smtp_port'] = 26;
+        $config['mailtype'] = 'html';
+        $config['charset']  = 'utf-8';
+        $config['crlf']  = "\r\n";
+        $config['newline']  = "\r\n";
+        $config['wordwrap'] = TRUE;
         // SMTP Username like. (abc@gmail.com)
         $config['smtp_user'] = 'roel.r@cloudwalkdigital.com';
         // SMTP Password like (abc***##)
         $config['smtp_pass'] = 'Cloud2468';
-        $config['mailtype'] = 'html';
         // Load email library and passing configured values to email library
-        $this->load->library('email', $config);
+//        $this->load->library('email', $config);
+        $this->load->library('email');
+
+        $this->email->initialize($config);
     }
 
     public function index()
     {
-        $this->load->view('page1camera');
+        $this->load->view('main');
+//        $this->load->view('page1camera');
     }
 
     public function print_img(){
@@ -74,7 +86,7 @@ class Photolive extends CI_Controller {
         imagejpeg($im,$outfile,$quality);
         imagedestroy($im);
 
-        return base_url($outfile);
+        return $outfile;
     }
 
     function print_me(){
@@ -198,18 +210,37 @@ class Photolive extends CI_Controller {
     }
 
     function email_share(){
-        // Sender email address
-        $this->email->from( 'info@cloudwalkdigital.com' );
-        // Receiver email address.for single email
-        $this->email->to( 'roelrosil1705@gmail.com', 'Roel');
-        // Subject of email
-        $this->email->subject('Photolive');
-        // Message in email
-        $this->email->message('');
-        $this->email->attach( $this->input->post('img') );
-        // It returns boolean TRUE or FALSE based on success or failure
-        if( $this->email->send() ){
-            echo 'success';
+        $mail = new PHPMailer();
+        $body =	"Hello";
+        $str_rep = str_replace(base_url(),'',$this->input->post('img'));
+
+        $mail->IsSMTP(); // telling the class to use SMTP
+        // $mail->Host       = "mail.photolive.com.ph"; // SMTP server	// if not work change to cloudwalkdigital SMTP server
+        $mail->Host       = "mail.cloudwalkdigital.com"; // SMTP server	// if not work change to cloudwalkdigital SMTP server
+        $mail->SMTPDebug  = 2;                     // enables SMTP debug information (for testing)
+        // 1 = errors and messages
+        // 2 = messages only
+        $mail->SMTPAuth   = true;                  // enable SMTP authentication
+        $mail->Host       = "mail.cloudwalkdigital.com"; // sets the SMTP server	// if not work change to cloudwalkdigital SMTP server
+        $mail->Port       = 26;                    // set the SMTP port for the GMAIL server
+        // $mail->Username   = "send@photolive.com.ph"; // SMTP account username
+        $mail->Username   = "whatsup@cloudwalkdigital.com"; // SMTP account username	// if not work change to cloudwalkdigital account username
+        // $mail->Password   = "photo2468";        // SMTP account password		// if not work change to cloudwalkdigital account password
+        $mail->Password   = "cloud2468";        // SMTP account password		// if not work change to cloudwalkdigital account password
+        $mail->SetFrom('whatsup@cloudwalkdigital.com', 'PhotoLive');		// if not work change to cloudwalkdigital account username
+        $mail->AddAddress($this->input->post('email_val'));
+        $mail->AddReplyTo("whatsup@cloudwalkdigital.com","PhotoLive");		// if not work change to cloudwalkdigital account username send@photolive.com.ph,  whatsup@cloudwalkdigital.com
+
+        $mail->Subject    = (!empty($content['email_subject']))? $content['email_subject']  : "Havaianas photo";
+
+        $mail->AltBody    = "PhotoTitle"; // optional, comment out and test
+        $mail->MsgHTML($body);
+
+        $mail->AddAttachment( $str_rep );      // attachment
+        if(!$mail->Send()) {
+            echo "Mailer Error: " . $mail->ErrorInfo;
+        } else {
+            echo "Message sent!";
         }
     }
 }
