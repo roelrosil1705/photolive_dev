@@ -1,0 +1,52 @@
+.top-logo{
+    height: 667px;
+}
+
+.bot-logo{
+    height: 445px;
+}
+
+#shareview{
+    max-height: 960px;
+}
+
+#bdy{
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#preview{
+    max-width: 50%;
+    border: 29px solid;
+}
+
+#frameview{
+    /*max-width: 50%;*/
+    /*background-color: #ffffff;*/
+    /*border: 10px solid;*/
+    /*border-color: black;*/
+    padding:10px;
+    align-items: center;
+}
+
+#frame1, #frame2, #frame3 {
+    border:5px solid #000000;
+}
+
+#frame1:hover{
+    -moz-box-shadow: 0 0 15px #fff;
+    -webkit-box-shadow: 0 0 15px #fff;
+    box-shadow: 0px 0px 15px #fff;
+}
+#frame2:hover{
+    -moz-box-shadow: 0 0 15px #fff;
+    -webkit-box-shadow: 0 0 15px #fff;
+    box-shadow: 0px 0px 15px #fff;
+}
+#frame3:hover{
+    -moz-box-shadow: 0 0 15px #fff;
+    -webkit-box-shadow: 0 0 15px #fff;
+    box-shadow: 0px 0px 15px #fff;
+}
+
+.hide{display: none !important;}

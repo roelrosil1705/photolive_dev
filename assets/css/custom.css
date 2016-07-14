@@ -1,0 +1,180 @@
+@font-face {
+    font-family: montserratRegular;
+    src: url(../montserrat/Montserrat-Regular.otf);
+}
+
+@font-face {
+    font-family: montserratBold;
+    src: url(../montserrat/Montserrat-Bold.otf);
+}
+
+@font-face {
+    font-family: montserratSemiBold;
+    src: url(../montserrat/Montserrat-SemiBold.otf);
+}
+
+@font-face {
+    font-family: montserratHairline;
+    src: url(../montserrat/Montserrat-Hairline.otf);
+}
+
+@font-face {
+    font-family: montserratLight;
+    src: url(../montserrat/Montserrat-Light.otf);
+}
+html, body {
+    /*background: #6f93a6; /!* For browsers that do not support gradients *!/
+    background: -webkit-linear-gradient(right top, #6f93a6, #0f4c83,#bf5c34) !important; /!* For Safari 5.1 to 6.0 *!/
+    background: -o-linear-gradient(bottom left,#6f93a6, #0f4c83,#bf5c34) !important; /!* For Opera 11.1 to 12.0 *!/
+    background: -moz-linear-gradient(bottom left,#6f93a6, #0f4c83,#bf5c34) !important; /!* For Firefox 3.6 to 15 *!/
+    background: linear-gradient(to bottom left,#6f93a6, #0f4c83,#bf5c34) !important; /!* Standard syntax *!/*/
+}
+
+.login-box {
+    background: #fff;
+    border: 1px solid #ddd;
+    /*margin: 100px 0;*/
+    padding: 10px 20px 0 20px;
+}
+
+/*.main-section{*//*option1*/
+    /*min-height: 94vh;*/
+    /*background: #6f93a6; /!* For browsers that do not support gradients *!/*/
+    /*background: -webkit-linear-gradient(right top, #6f93a6, #0f4c83,#bf5c34); /!* For Safari 5.1 to 6.0 *!/*/
+    /*background: -o-linear-gradient(bottom left,#6f93a6, #0f4c83,#bf5c34); /!* For Opera 11.1 to 12.0 *!/*/
+    /*background: -moz-linear-gradient(bottom left,#6f93a6, #0f4c83,#bf5c34); /!* For Firefox 3.6 to 15 *!/*/
+    /*background: linear-gradient(to bottom left,#6f93a6, #0f4c83,#bf5c34); /!* Standard syntax *!/*/
+/*}*/
+
+.main-section{
+    /*min-height: 94vh;*/
+    /*background: #fff;*/ /* For browsers that do not support gradients */
+    /*background: -webkit-linear-gradient( #0f4c83, #808080  ); /!* For Safari 5.1 to 6.0 *!/
+    background: -o-linear-gradient( #0f4c83, #808080  ); /!* For Opera 11.1 to 12.0 *!/
+    background: -moz-linear-gradient( #0f4c83, #808080  ); /!* For Firefox 3.6 to 15 *!/
+    background: linear-gradient( #0f4c83, #808080  ); /!* Standard syntax *!/
+    background-repeat: no-repeat;
+    background-size: 100%*/;
+}
+
+.dash_button{
+    width:100%;
+}
+
+.dash_col{
+    padding-top: 2em;
+}
+
+.accordion_bg {
+    background: #015ea1 !important;
+    color: white !important;
+    border-bottom: thin solid #FFFFFF;
+}
+
+.width80{
+    width: 80% !important;
+}
+
+.width20{
+    width: 20% !important;
+}
+
+.profile_picture, .profile_img{
+    max-width: 150px;
+}
+
+.mar10{
+    margin-top: 10px;
+}
+
+.profile_img{
+    /*margin-bottom: 5%;*/
+    min-width: 230px;
+    margin-bottom: 10px;
+}
+
+#ta_contact{
+    max-width: 315px;
+    min-width: 315px;
+    min-height: 69px;
+}
+
+.nav_logo{
+    max-height: 38px;
+}
+
+ul.off-canvas-list li a:hover {
+     color: #000;
+}
+
+.login_logo{
+    margin-bottom: 10px;
+    max-height: 75px;
+}
+
+.accordion li > a {
+    border-radius: 15px;
+    margin-top: 3px;
+}
+
+.force_right_align{
+    text-align: right;
+}
+
+/*calendar*/
+.calendar {
+    font-family: montserratRegular;
+}
+table.calendar{
+    margin: auto;
+    /*border-collapse: collapse;*/
+}
+.calendar .days td {
+    width: 80px; height: 80px; padding: 4px;
+    border: 2px solid #a8a9ad;
+    vertical-align: top;
+    /*background-color: #def;*/
+}
+.calendar .days td:hover {
+
+    border-color: #f57e20;
+    /*background-color: #f57e20; */
+    /*-moz-box-shadow: 0 0 10px #ccc;*/
+    /*-webkit-box-shadow: 0 0 10px #ccc;*/
+    /*box-shadow: 0 0 10px #2a92db;*/
+    /*border-color: #2a92db;*/
+}
+
+
+.calendar .highlight {
+    font-weight: bold; color: #00f;
+}
+.day_num:hover{
+    /*color: #fff;*/
+
+}
+.day_num{
+    font-size: 20px;
+    color: #a8a9ad;
+}
+.content{
+    color: #f57e20;
+
+}
+.content:hover{
+    /*color: #fff;*/
+}
+
+table tr.even, table tr.alt, table tr:nth-of-type(even) {
+    background: rgba(0,0,0,0) !important;
+}
+/*end calendar*/
+
+.inv_tabs{
+    width:auto !important;
+    max-width: 100% !important;
+}
+
+.tbl_bdr{
+    border-radius:8px;
+}
