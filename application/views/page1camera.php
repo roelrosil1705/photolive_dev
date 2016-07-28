@@ -61,7 +61,6 @@
         <a id="ema_btn" class="button large hide"  data-reveal-id="emailModel">Email</a>
         <a class="btnPrint button large hide" href="<?=base_url('index.php/photolive/print_me');?>" target="_blank">Print</a>
     </div>
-    <div id="fb-root"></div>
 
     <div id="successModel" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
         <h2 id="modalTitle">Shared Successfully</h2>
@@ -89,32 +88,42 @@
     <script src="<?=base_url('assets/js/swfobject.js');?>"></script>
     <script src="<?=base_url('assets/js/scriptcam/scriptcam.min.js');?>"></script>
     <script src="<?=base_url('assets/js/app.js')?>"></script>
+    <div id="fb-root"></div>
     <script>
         window.fbAsyncInit = function() {
             FB.init({
                 appId: '203010123089210',
                 // cookie: true,
                 xfbml: true,
-                oauth: true,
-                version: 'v2.5'
+                oauth: true
             });
         };
 
-        (function(d, s, id){
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) {return;}
-            js = d.createElement(s); js.id = id;
-            js.src = "//connect.facebook.net/en_US/sdk.js";
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
+        (function() {
+            var e = document.createElement('script'); e.async = true;
+            e.src = document.location.protocol +
+                '//connect.facebook.net/en_US/all.js';
+            document.getElementById('fb-root').appendChild(e);
+        }());
 
         $('.fb').click(function(){
             var str_url = document.getElementById('preview').src;
             var res = str_url.replace( MyNameSpace.config.base_url, "" );
-            console.log(str_url);
             FB.login(function(response) {
                 if (response.authResponse) {
-                    location.href= "share/fbShare?img_url=index.php"+res;
+                    location.href= "index.php/share/fbShare?img_url="+res;
+//                    $.ajax({
+//                        url: MyNameSpace.config.base_url+'share/fbShare',
+//                        type:'post',
+//                        crossDomain: true,
+//                        data: {
+//                            'img_url' : res
+//                        },
+//                        success: function(response) {
+//                            console.log(response);
+//                        }
+//                    });
+
                 }
             }, {scope: 'email,publish_stream,user_photos,photo_upload'});
         });

@@ -3,8 +3,8 @@ var img_type = '';
 $(document).ready(function() {
 
     $("#webcam").scriptcam({
-        width: 960,
-        height: 720,
+        width: 840,
+        height: 630,
         showMicrophoneErrors:false,
         onError:onError,
         cornerRadius:20,

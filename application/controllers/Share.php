@@ -4,16 +4,30 @@ class Share extends CI_Controller {
 
     public function __construct()
     {
+//        header( 'Access-Control-Allow-Origin: *' );
+//
+//        if ( $_SERVER[ 'REQUEST_METHOD' ] == "OPTIONS" )
+//        {
+//            log_message( 'debug', 'Configure webserver to handle OPTIONS-request without invoking this script' );
+//            header( 'Access-Control-Allow-Credentials: true' );
+//            header( 'Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS' );
+//            header( 'Access-Control-Allow-Headers: ACCEPT, ORIGIN, X-REQUESTED-WITH, CONTENT-TYPE, AUTHORIZATION' );
+//            header( 'Access-Control-Max-Age: 86400' );
+//            header( 'Content-Length: 0' );
+//            header( 'Content-Type: text/plain' );
+//            exit ;
+//        }
         parent::__construct();
         $this->load->library('fb/facebook');
     }
 
     public function fbShare()
     {
-        $img_url = $this->input->get('comp_img');
+        // $img_url = $this->input->get('img_url');
+        $img_url = $this->input->get('img_url');
 
-         echo $file = "@".realpath(urldecode($img_url));
-         return false;
+        // echo $file = "@".realpath(urldecode($img_url));
+        // return false;
 
         $facebook = new Facebook(array(
             'appId'  => '203010123089210',
@@ -25,13 +39,23 @@ class Share extends CI_Controller {
 
         $user = $facebook->getUser();
 
-        $logoutUrl = $facebook->getLogoutUrl(
-            array(
-                'next' => "http://photolivedesktop.com"
-            ));
+        if ($user) {
+            try {
+                $user_profile = $facebook->api('/me');
+            } catch (FacebookApiException $e) {
+                //header("location:page9.php");
+                error_log($e);
+                $user = null;
+            }
+        }
+
+//        $logoutUrl = $facebook->getLogoutUrl(
+//            array(
+//                'next' => "http://photolivedesktop.com"
+//            ));
 
         if ($user) {
-            header("Location: ".$logoutUrl);
+//            header("Location: ".$logoutUrl);
         } else {
             $loginUrl = $facebook->getLoginUrl(
                 array(
@@ -69,22 +93,27 @@ class Share extends CI_Controller {
                 $album_uid = $create_album['id'];
             }
 
-            $file = "@".realpath($img_url);
+//            $file = "@".realpath($img_url);
+            $facebook->setFileUploadSupport(true);
+            $args = array('message' => 'Photo Caption');
+            $args['image'] = '@' . realpath($img_url);
 
-            $photo_details = array(
-                'image' => $file,
-                'message' => html_entity_decode("Sunsilk", ENT_QUOTES, 'UTF-8') // Photo Description ()
-            );
+            $data = $facebook->api('/me/photos', 'post', $args);
+            print_r($data);
+            return false;
 
-            $upload_photo = $facebook->api('/'.$album_uid.'/photos', 'post', $photo_details);
-            if ($upload_photo) {
-                header("Location: ".$logoutUrl);
-                session_destroy();
-            }
-            session_destroy();
+//            $photo_details = array(
+//                'image' => $file,
+//                'message' => html_entity_decode("Sunsilk", ENT_QUOTES, 'UTF-8') // Photo Description ()
+//            );
+//
+//            $upload_photo = $facebook->api('/'.$album_uid.'/photos', 'post', $photo_details);
+//            if ($upload_photo) {
+//                header("Location: ".$logoutUrl);
+//                session_destroy();
+//            }
+//            session_destroy();
         }
-
-        //end fbshare
     }
 
 }

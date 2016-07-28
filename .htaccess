@@ -1,5 +1,4 @@
 <IfModule mod_rewrite.c>
-        RewriteEngine On
         RewriteBase /
 
         # Removes index.php from ExpressionEngine URLs
