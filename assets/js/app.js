@@ -39,7 +39,7 @@ function base64_toimage() {
                    $('#frameview').addClass('hide');
                    $('#shareview').removeClass('hide');
                    $('.fb').removeClass('hide');
-                   // $('.tweet').removeClass('hide');
+                   $('.tweet').removeClass('hide');
                    $('#ema_btn').removeClass('hide');
                    $('.btnPrint').removeClass('hide');
                    $('#preview').attr('src', html);

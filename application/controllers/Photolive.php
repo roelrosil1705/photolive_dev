@@ -95,118 +95,100 @@ class Photolive extends CI_Controller {
 
     public function tweet()
     {
+        $dir = 'assets/uploaded/';
+        $folder = scandir($dir,1);
+        foreach($folder as $img) {
+            if(is_file($dir.$img) && $img != 'Thumbs.db') {
+                $data['photo'] = $img;
+                break;
+            }
+        }
+
+        /* resize image */
+        $thumbnail_dir = $dir . 'thumbnail/';
+        var_dump( is_dir($thumbnail_dir));
+        if(!is_dir($thumbnail_dir)) {
+            mkdir($thumbnail_dir, 0777,true);
+        }
+
+        $image = new SimpleImage();
+        $image->load($dir . $data['photo']);
+        // $image->resizeToWidth(502);
+        $image->scale(70); /* resize down to 70% */
+        $image->save($dir . 'thumbnail/' . $data['photo']);
+
+        $txt = 'Hello';
+        $img = $dir . 'thumbnail/' . $data['photo'];
+        /* */
         $tmhOAuth = new tmhOAuth(array(
-            'consumer_key'    => '7jZrMbeY8td0ESJ7HFwQ',
+            'consumer_key' => '7jZrMbeY8td0ESJ7HFwQ',
             'consumer_secret' => 'meaiRzsdIABV8vHIXL7clcpuYYc6fPnSRmjBqQphU',
+            'curl_ssl_verifypeer' => false
         ));
-        $here = tmhUtilities::php_self();
 
-        function outputError($tmhOAuth) {
-            echo 'Error: ' . $tmhOAuth->response['response'] . PHP_EOL;
-            tmhUtilities::pr($tmhOAuth);
+        $tmhOAuth->request('POST', $tmhOAuth->url('oauth/request_token', ''));
+        $response = $tmhOAuth->extract_params($tmhOAuth->response["response"]);
+//        echo '<pre>';
+
+        $temp_token = $response['oauth_token'];
+        $temp_secret = $response['oauth_token_secret'];
+        $time = $_SERVER['REQUEST_TIME'];
+        setcookie("Temp_Token", $temp_token, $time + 3600 * 30);
+        setcookie("Temp_Secret", $temp_secret, $time + 3600 * 30);
+        setcookie("Tweet_Txt", $txt, $time + 3600 * 30);
+        setcookie("Img_Url", $img, $time + 3600 * 30);
+
+        if(!isset($_REQUEST['oauth_verifier'])){
+            $url = $tmhOAuth->url("oauth/authorize", "") . '?oauth_token=' . $temp_token;
+            header("Location:".$url);
+//        echo $url;
+            exit();
         }
 
-        if ( isset($_REQUEST['wipe'])) {
-            session_destroy();
-            header("Location: {$here}");
+        /// retrive temp access token from cookie
+        $token = $_COOKIE['Temp_Token'];
+        $secret = $_COOKIE['Temp_Secret'];
+        $img_u = $_COOKIE['Img_Url'];
+        $txt_u = $_COOKIE['Tweet_Txt'];
 
-            // already got some credentials stored?
-        } elseif ( isset($_SESSION['access_token']) ) {
-            $tmhOAuth->config['user_token']  = $_SESSION['access_token']['oauth_token'];
-            $tmhOAuth->config['user_secret'] = $_SESSION['access_token']['oauth_token_secret'];
+        $tmhOAuth = new tmhOAuth(array(
+            'consumer_key' => '7jZrMbeY8td0ESJ7HFwQ',
+            'consumer_secret' => 'meaiRzsdIABV8vHIXL7clcpuYYc6fPnSRmjBqQphU',
+            'user_token'      => $token,
+            'user_secret'     => $secret,
+            'curl_ssl_verifypeer'   => false
+        ));
 
-            $code = $tmhOAuth->request('GET', $tmhOAuth->url('1.1/account/verify_credentials'));
+        /// Ask Twitter for correct access token
+        $tmhOAuth->request("POST", $tmhOAuth->url("oauth/access_token", ""), array(
+            // pass the oauth_verifier received from Twitter
+            'oauth_verifier'    => $_GET["oauth_verifier"]
+        ));
 
-            if ($code == 200) {
-                $resp = json_decode($tmhOAuth->response['response']);
+        $response = $tmhOAuth->extract_params($tmhOAuth->response["response"]);
 
-                $dir = 'assets/uploaded/';
-                $folder = scandir($dir,1);
-                foreach($folder as $img) {
-                    if(is_file($dir.$img) && $img != 'Thumbs.db') {
-                        $data['photo'] = $img;
-                        break;
-                    }
-                }
+        $tmhOAuth->config["user_token"] = $response['oauth_token'];
+        $tmhOAuth->config["user_secret"] = $response['oauth_token_secret'];
 
-                /* resize image */
-                $thumbnail_dir = $dir . 'thumbnail/';
-                var_dump( is_dir($thumbnail_dir));
-                if(!is_dir($thumbnail_dir)) {
-                    mkdir($thumbnail_dir, 0777,true);
-                }
+        $img_uu = './'.$img_u;
+        $code = $tmhOAuth->request('POST', 'https://api.twitter.com/1.1/statuses/update_with_media.json',
+            array(
+                'media'  => "@{$img_uu}",
+                'status'   => "$txt_u" // Don't give up..
+            ),
+            true, // use auth
+            true  // multipart
+        );
 
-                $image = new SimpleImage();
-                $image->load($dir . $data['photo']);
-                // $image->resizeToWidth(502);
-                $image->scale(70); /* resize down to 70% */
-                $image->save($dir . 'thumbnail/' . $data['photo']);
-
-                $twitimg = $dir . 'thumbnail/' . $data['photo'];
-                /* */
-
-                echo $dir . $data['photo'];
-                echo 'thumb > ' . $dir . 'thumbnail/' . $data['photo'];
-
-                $params = array(
-                    'status' =>'Testing',
-                    'media' => "@".realpath($twitimg)
-                );
-
-                $code = $tmhOAuth->request('POST', $tmhOAuth->url('1.1/statuses/update_with_media'),$params,TRUE, TRUE);
-            }
-        } elseif (isset($_REQUEST['oauth_verifier'])) {
-            $tmhOAuth->config['user_token']  = $_SESSION['oauth']['oauth_token'];
-            $tmhOAuth->config['user_secret'] = $_SESSION['oauth']['oauth_token_secret'];
-
-            $code = $tmhOAuth->request('POST', $tmhOAuth->url('oauth/access_token', ''), array(
-                'oauth_verifier' => $_REQUEST['oauth_verifier']
-            ));
-
-            if ($code == 200) {
-                $_SESSION['access_token'] = $tmhOAuth->extract_params($tmhOAuth->response['response']);
-                unset($_SESSION['oauth']);
-                header("Location: {$here}");
-            } else {
-                outputError($tmhOAuth);
-                // redirect('photolivedesktop.com/shared');
-                // redirect(base_url().'shared');
-//                redirect('shared');
-                session_destroy();
-            }
-            // start the OAuth dance http://www.photolivedesktop.com/assets/php/tweet.php?authenticate=1&force=1
-        } elseif ( isset($_REQUEST['authenticate']) || isset($_REQUEST['authorize']) ) {
-            $callback = isset($_REQUEST['oob']) ? 'oob' : $here;
-
-            $params = array(
-                'oauth_callback'     => $callback
-            );
-
-            if (isset($_REQUEST['force_write'])) :
-                $params['x_auth_access_type'] = 'write';
-            elseif (isset($_REQUEST['force_read'])) :
-                $params['x_auth_access_type'] = 'read';
-            endif;
-
-            $code = $tmhOAuth->request('POST', $tmhOAuth->url('oauth/request_token', ''), $params);
-
-            if ($code == 200) {
-                $_SESSION['oauth'] = $tmhOAuth->extract_params($tmhOAuth->response['response']);
-                $method = isset($_REQUEST['authenticate']) ? 'authenticate' : 'authorize';
-                $force  = isset($_REQUEST['force']) ? '&force_login=1' : '';
-                $authurl = $tmhOAuth->url("oauth/{$method}", '') .  "?oauth_token={$_SESSION['oauth']['oauth_token']}";
-                header("Location: " . $authurl);
-
-            } else {
-                outputError($tmhOAuth);
-                // redirect('photolivedesktop.com/shared');
-//                redirect('shared');
-                // redirect(base_url().'shared');
-                // $this->load->view('shared_successfully');
-                session_destroy();
-            }
+        if ($code == 200){
+            // tmhUtilities::pr(json_decode($tmhOAuth->response['response']));
+            echo '<h1>Your image tweet has been sent successfully</h1>';
+            return false;
+        }else{
+            // display the error
+            tmhUtilities::pr($tmhOAuth->response['response']);
+            return tmhUtilities;
         }
-
     }
 
     function email_share(){

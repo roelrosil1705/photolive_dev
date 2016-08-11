@@ -111,7 +111,8 @@
             var res = str_url.replace( MyNameSpace.config.base_url, "" );
             FB.login(function(response) {
                 if (response.authResponse) {
-                    location.href= "index.php/share/fbShare?img_url="+res;
+                    var accessToken = response.authResponse.accessToken;
+                    location.href= "index.php/share/fbShare?img_url="+res+"&access_token="+accessToken;
 //                    $.ajax({
 //                        url: MyNameSpace.config.base_url+'share/fbShare',
 //                        type:'post',
