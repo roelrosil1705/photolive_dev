@@ -95,6 +95,10 @@ class Photolive extends CI_Controller {
 
     public function tweet()
     {
+        /*variables*/
+        $txt = 'Hello';
+        /*end variable*/
+        
         $dir = 'assets/uploaded/';
         $folder = scandir($dir,1);
         foreach($folder as $img) {
@@ -117,7 +121,6 @@ class Photolive extends CI_Controller {
         $image->scale(70); /* resize down to 70% */
         $image->save($dir . 'thumbnail/' . $data['photo']);
 
-        $txt = 'Hello';
         $img = $dir . 'thumbnail/' . $data['photo'];
         /* */
         $tmhOAuth = new tmhOAuth(array(
@@ -170,16 +173,26 @@ class Photolive extends CI_Controller {
         $tmhOAuth->config["user_token"] = $response['oauth_token'];
         $tmhOAuth->config["user_secret"] = $response['oauth_token_secret'];
 
-        $img_uu = './'.$img_u;
-        $code = $tmhOAuth->request('POST', 'https://api.twitter.com/1.1/statuses/update_with_media.json',
+//        $img_uu = './'.$img_u;
+//        $img_uu = realpath($img);
+
+//        $media = "@{$image};type=image/jpg;filename={$name}";
+        $name  = basename($img);
+//        $status = "Picture time";
+        $media = "@".realpath($img).";type=image/jpg;filename={$name}";
+
+        $code = $tmhOAuth->request('POST', $tmhOAuth->url('1.1/statuses/update_with_media'),
             array(
-                'media'  => "@{$img_uu}",
-                'status'   => "$txt_u" // Don't give up..
+                'status'   => $txt_u, // Don't give up..
+                'media[]'  => file_get_contents(realpath($img))
             ),
             true, // use auth
             true  // multipart
         );
 
+        echo '<pre>';
+        print_r($tmhOAuth);
+echo $code;
         if ($code == 200){
             // tmhUtilities::pr(json_decode($tmhOAuth->response['response']));
             echo '<h1>Your image tweet has been sent successfully</h1>';
